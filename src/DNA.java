@@ -20,4 +20,8 @@ public class DNA {
         }
         return chromosome;
     }
+
+    public int[][] getChromosome() {
+        return chromosome;
+    }
 }

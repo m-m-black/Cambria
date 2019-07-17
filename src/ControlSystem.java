@@ -10,9 +10,9 @@ public class ControlSystem extends Thread {
     boolean quit = false;
 
     // Global population variables
-    int popSize;
+    int popSize = 10;
     int genNum;
-    int chromLength;
+    int chromLength = 16;
     double crossRate;
     double mutRate;
 
@@ -21,6 +21,7 @@ public class ControlSystem extends Thread {
 
     @Override
     public void run() {
+        //population.printPop();
         System.out.println("Welcome to Cambria");
         try {
             while (!quit && (line = bufferedReader.readLine()) != null) {
@@ -46,6 +47,7 @@ public class ControlSystem extends Thread {
                         break;
                     case "SET":
                         // Set currMember in conductor
+                        conductor.setCurrMember(population.sendMember());
                         break;
                     case "EVOLVE":
                         population.evolve();
