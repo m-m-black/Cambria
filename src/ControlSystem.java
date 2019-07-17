@@ -9,8 +9,15 @@ public class ControlSystem extends Thread {
     String line;
     boolean quit = false;
 
+    // Global population variables
+    int popSize;
+    int genNum;
+    int chromLength;
+    double crossRate;
+    double mutRate;
+
     Conductor conductor = new Conductor();
-    Population population = new Population();
+    Population population = new Population(popSize, chromLength);
 
     @Override
     public void run() {
