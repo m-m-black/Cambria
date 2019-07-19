@@ -13,11 +13,11 @@ public class ControlSystem extends Thread {
     int popSize = 10;
     int genNum;
     int chromLength = 16;
-    double crossRate;
-    double mutRate;
+    double crossRate = 0.8;
+    double mutRate = 0.01;
 
     Conductor conductor = new Conductor();
-    Population population = new Population(popSize, chromLength);
+    Population population = new Population(popSize, chromLength, crossRate, mutRate);
 
     @Override
     public void run() {

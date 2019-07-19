@@ -30,7 +30,7 @@ public class Member {
         this.fitness = fitness;
     }
 
-    public void mutate() {
+    public void mutate(double mutRate) {
 
     }
 }

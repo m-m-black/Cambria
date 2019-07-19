@@ -6,12 +6,18 @@ public class Population {
     private Member[] childPop;
     private Random random;
     private int chromLength;
+    private double crossRate;
+    private int crossPoint;
+    private double mutRate;
 
-    public Population(int popSize, int chromLength) {
+    public Population(int popSize, int chromLength, double crossRate, double mutRate) {
         parentPop = new Member[popSize];
         childPop = new Member[popSize];
         random = new Random();
         this.chromLength = chromLength;
+        this.crossRate = crossRate;
+        crossPoint = (int) (parentPop.length * crossRate);
+        this.mutRate = mutRate;
         initPop(popSize, chromLength);
     }
 
@@ -38,8 +44,21 @@ public class Population {
     public void evolve() {
         // Assess fitness
         assess();
-        // Perform selection, including crossover
-        select();
+        // Iterate over population to perform selection and crossover
+        for (int i = 0; i < parentPop.length; i++) {
+            if (i < crossPoint) {
+                // Perform crossover of parents
+                Member[] parents = select();
+                Member child = crossover(parents);
+                child.mutate(mutRate);
+                childPop[i] = child;
+            } else {
+                // Perform tournament and add winner to population
+                childPop[i] = tourney();
+            }
+            // Set parent population to child population
+            parentPop = childPop;
+        }
     }
 
     private void assess() {
@@ -49,20 +68,22 @@ public class Population {
         }
     }
 
+    private Member tourney() {
+        // Return winner of a tournament
+        int a = random.nextInt(parentPop.length);
+        int b = random.nextInt(parentPop.length);
+        if (parentPop[a].getFitness() > parentPop[b].getFitness()) {
+            return parentPop[a];
+        } else {
+            return parentPop[b];
+        }
+    }
+
     private Member[] select() {
         // Perform tournament selection and return 2 parents
         Member[] parents = new Member[2];
         for (int i = 0; i < 2; i++) {
-            int a = random.nextInt(parentPop.length);
-            int b = random.nextInt(parentPop.length);
-            Member competitorA = parentPop[a];
-            Member competitorB = parentPop[b];
-            // The tournament
-            if (competitorA.getFitness() > competitorB.getFitness()) {
-                parents[i] = competitorA;
-            } else {
-                parents[i] = competitorB;
-            }
+            parents[i] = tourney();
         }
         return parents;
     }
