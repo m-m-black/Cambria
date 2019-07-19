@@ -8,6 +8,10 @@ public class DNA {
         chromosome = initChrom(chromLength);
     }
 
+    public DNA(int[][] chromosome) {
+        this.chromosome = chromosome;
+    }
+
     private int[][] initChrom(int chromLength) {
         // Randomly set 0s and 1s in 2D bit array
         int[][] chromosome = new int[4][chromLength];
