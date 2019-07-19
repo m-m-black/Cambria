@@ -1,3 +1,5 @@
+import java.util.Random;
+
 public class Member {
 
     private DNA dna;
@@ -30,7 +32,18 @@ public class Member {
         this.fitness = fitness;
     }
 
-    public void mutate(double mutRate) {
-
+    public void mutate(double mutRate, Random random) {
+        // Iterate over chromosome, flipping bits if we exceed the mutation threshold
+        for (int i = 0; i < dna.getChromosome().length; i++) {
+            for (int j = 0; i < dna.getChromosome()[i].length; j++) {
+                if (random.nextDouble() < mutRate) {
+                    if (dna.getChromosome()[i][j] == 0) {
+                        dna.getChromosome()[i][j] = 1;
+                    } else {
+                        dna.getChromosome()[i][j] = 0;
+                    }
+                }
+            }
+        }
     }
 }
