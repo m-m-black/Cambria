@@ -50,7 +50,7 @@ public class Population {
                 // Perform crossover of parents
                 Member[] parents = select();
                 Member child = crossover(parents);
-                child.mutate(mutRate);
+                child.mutate(mutRate, random);
                 childPop[i] = child;
             } else {
                 // Perform tournament and add winner to population
