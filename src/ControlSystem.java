@@ -8,6 +8,7 @@ public class ControlSystem extends Thread {
     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
     String line;
     boolean quit = false;
+    double[] desiredValues = new double[6]; // For the 6 musical features
 
     // Global population variables
     int popSize = 10;
@@ -18,6 +19,7 @@ public class ControlSystem extends Thread {
 
     Conductor conductor = new Conductor();
     Population population = new Population(popSize, chromLength, crossRate, mutRate);
+    Objective objective = new Objective();
 
     @Override
     public void run() {

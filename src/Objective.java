@@ -1,9 +1,10 @@
 public class Objective {
 
     private double[] desiredValues;
+    private double[] actualValues;
 
-    public Objective(double[] desiredValues) {
-        this.desiredValues = desiredValues;
+    public Objective() {
+        actualValues = new double[6];
     }
 
     public static void assess(Member member) {
