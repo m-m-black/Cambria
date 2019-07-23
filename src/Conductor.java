@@ -17,12 +17,14 @@ public class Conductor {
             {0, 0, 0, 0, 0, 1, 0, 0}
     };
 
+    private int[][] member = Utility.initChrom(16);
+
     public Conductor() {
         tempo = 120; // default tempo setting
         running = false;
         currMember = null;
         openMIDIDevice(); // get MIDI device ready for Player
-        player = new Player(midiDevice, testMember);
+        player = new Player(midiDevice, member);
     }
 
     private void openMIDIDevice() {
@@ -70,5 +72,10 @@ public class Conductor {
     public void setCurrMember(Member currMember) {
         this.currMember = currMember.getDna().getChromosome();
         player.setSequence(this.currMember);
+    }
+
+    // Test method to set a new random sequence
+    public void setMember() {
+        player.setSequence(Utility.initChrom(16));
     }
 }
