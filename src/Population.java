@@ -64,7 +64,7 @@ public class Population {
     private void assess() {
         // Assess fitness of each Member
         for (Member m: parentPop) {
-            Fitness.assess(m);
+            Objective.assess(m);
         }
     }
 
