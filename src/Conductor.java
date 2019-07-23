@@ -4,7 +4,7 @@ import javax.sound.midi.MidiUnavailableException;
 
 public class Conductor {
 
-    private int tempo;
+    private int tempo; // tempo in bpm
     private boolean running;
     private int[][] currMember;
     private MidiDevice midiDevice;
@@ -18,11 +18,11 @@ public class Conductor {
     };
 
     public Conductor() {
-        tempo = 0;
+        tempo = 120; // default tempo setting
         running = false;
         currMember = null;
-        openMIDIDevice();
-        player = new Player(midiDevice, tempo, testMember);
+        openMIDIDevice(); // get MIDI device ready for Player
+        player = new Player(midiDevice, testMember);
     }
 
     private void openMIDIDevice() {
@@ -40,7 +40,9 @@ public class Conductor {
 
     public void setTempo(int tempo) {
         this.tempo = tempo;
-        player.setTempo(tempo);
+        if (running) {
+            player.changeReadInterval(tempo);
+        }
     }
 
     public boolean isRunning() {
@@ -50,7 +52,7 @@ public class Conductor {
     public void start() {
         if (!running) {
             running = true;
-            player.start();
+            player.start(tempo);
         }
     }
 
