@@ -10,6 +10,7 @@
 
 public class Objective {
 
+    // Variables for feature values
     private static double[] desiredValues;
     private static double[] actualValues;
 
@@ -39,6 +40,7 @@ public class Objective {
         resetErrors();
     }
 
+    // The actual objective function called on a Member
     public static void assess(Member member) {
         int[][] chrom = member.getDna().getChromosome();
         int rows = chrom.length;
@@ -70,6 +72,7 @@ public class Objective {
         this.desiredValues = desiredValues;
     }
 
+    // Calculate cost based on error between desired and actual feature values
     private static double calcCost() {
         hocketError = Math.abs(desiredValues[0] - actualValues[0]);
         densityError = Math.abs(desiredValues[1] - actualValues[1]);
@@ -81,6 +84,7 @@ public class Objective {
                 downbeatError + backbeatError);
     }
 
+    // Calculate actual feature values
     private static void calcActual(int length) {
         // Hocket
         actualValues[0] = hocketNotes / totalNotes;
@@ -104,6 +108,7 @@ public class Objective {
         actualValues[5] = backbeats;
     }
 
+    // Increment counter variables used to calculate actual feature values
     private static void incrementCounters(int i, int noteCounter, int[][] chrom) {
         // Calculate total beats with at least 1 note
         if (noteCounter > 0) {
@@ -127,6 +132,7 @@ public class Objective {
         }
     }
 
+    // Check if downbeats and backbeats are active
     private static void checkEmphasisBeats(int[][] chrom) {
         // Calculate downbeats
         if (chrom[0][0] == 1) {
