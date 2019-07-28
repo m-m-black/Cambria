@@ -10,7 +10,7 @@
 
 public class Objective {
 
-    private double[] desiredValues;
+    private static double[] desiredValues;
     private static double[] actualValues;
 
     // Variables to analyse the Member
@@ -21,20 +21,30 @@ public class Objective {
     private static int secondHalfNotes;
     private static int downbeats;
     private static double backbeats;
-    private static int noteCounter;
     private static double firstHalfDensity;
     private static double secondHalfDensity;
+    private static int noteCounter;
+
+    // Error variables
+    private static double hocketError;
+    private static double densityError;
+    private static double syncopationError;
+    private static double balanceError;
+    private static double downbeatError;
+    private static double backbeatError;
 
     public Objective() {
         actualValues = new double[6];
         resetCounters();
+        resetErrors();
     }
 
     public static void assess(Member member) {
         int[][] chrom = member.getDna().getChromosome();
         int rows = chrom.length;
-        // Reset all analysis variables to 0
+        // Reset all analysis variables and errors to 0
         resetCounters();
+        resetErrors();
         // Calculate analysis variables
         for (int i = 0; i < chrom[0].length; i++) {
             // Calculate number of notes per beat
@@ -61,7 +71,14 @@ public class Objective {
     }
 
     private static double calcCost() {
-        return 0;
+        hocketError = Math.abs(desiredValues[0] - actualValues[0]);
+        densityError = Math.abs(desiredValues[1] - actualValues[1]);
+        syncopationError = Math.abs(desiredValues[2] - actualValues[2]);
+        balanceError = Math.abs(desiredValues[3] - actualValues[3]);
+        downbeatError = Math.abs(desiredValues[4] - actualValues[4]);
+        backbeatError = Math.abs(desiredValues[5] - actualValues[5]);
+        return (hocketError + densityError + syncopationError + balanceError +
+                downbeatError + backbeatError);
     }
 
     private static void calcActual(int length) {
@@ -133,8 +150,18 @@ public class Objective {
         secondHalfNotes = 0;
         downbeats = 0;
         backbeats = 0;
-        noteCounter = 0;
         firstHalfDensity = 0;
         secondHalfDensity = 0;
+        noteCounter = 0;
+    }
+
+    // Sets all error values to 0.0
+    private static void resetErrors() {
+        hocketError = 0.0;
+        densityError = 0.0;
+        syncopationError = 0.0;
+        balanceError = 0.0;
+        downbeatError = 0.0;
+        backbeatError = 0.0;
     }
 }
