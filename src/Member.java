@@ -3,17 +3,17 @@ import java.util.Random;
 public class Member {
 
     private DNA dna;
-    private double fitness;
+    private double cost;
 
     // Constructor for making blank child during crossover
     public Member() {
         dna = null;
-        fitness = 0;
+        cost = 0;
     }
 
     public Member(int chromLength) {
         dna = new DNA(chromLength);
-        fitness = 0;
+        cost = 0;
     }
 
     public DNA getDna() {
@@ -24,12 +24,12 @@ public class Member {
         this.dna = dna;
     }
 
-    public double getFitness() {
-        return fitness;
+    public double getCost() {
+        return cost;
     }
 
-    public void setFitness(double fitness) {
-        this.fitness = fitness;
+    public void setCost(double cost) {
+        this.cost = cost;
     }
 
     public void mutate(double mutRate, Random random) {
