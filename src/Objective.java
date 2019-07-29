@@ -35,6 +35,7 @@ public class Objective {
     private static double backbeatError;
 
     public Objective() {
+        desiredValues = new double[6];
         actualValues = new double[6];
         resetCounters();
         resetErrors();
@@ -66,10 +67,6 @@ public class Objective {
         double cost = calcCost();
         // Set Member's cost
         member.setCost(cost);
-    }
-
-    public void setDesiredValues(double[] desiredValues) {
-        this.desiredValues = desiredValues;
     }
 
     // Calculate cost based on error between desired and actual feature values
@@ -169,5 +166,58 @@ public class Objective {
         balanceError = 0.0;
         downbeatError = 0.0;
         backbeatError = 0.0;
+    }
+
+    // Return desired values to ControlSystem
+    public double[] getDesiredValues() {
+        return desiredValues;
+    }
+
+    public double getHocket() {
+        return desiredValues[0];
+    }
+
+    public void setHocket(double v) {
+        desiredValues[0] = v;
+    }
+
+    public double getDensity() {
+        return desiredValues[1];
+    }
+
+    public void setDensity(double v) {
+        desiredValues[1] = v;
+    }
+
+    public double getSyncopation() {
+        return desiredValues[2];
+    }
+
+    public void setSyncopation(double v) {
+        desiredValues[2] = v;
+    }
+
+    public double getBalance() {
+        return desiredValues[3];
+    }
+
+    public void setBalance(double v) {
+        desiredValues[3] = v;
+    }
+
+    public double getDownbeat() {
+        return desiredValues[4];
+    }
+
+    public void setDownbeat(double v) {
+        desiredValues[4] = v;
+    }
+
+    public double getBackbeat() {
+        return desiredValues[5];
+    }
+
+    public void setBackbeat(double v) {
+        desiredValues[5] = v;
     }
 }

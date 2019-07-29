@@ -54,6 +54,48 @@ public class ControlSystem extends Thread {
                     case "EVOLVE":
                         population.evolve();
                         break;
+                    case "HOCK":
+                        if (tokens.length == 1) {
+                            System.out.println(objective.getHocket());
+                        } else if (tokens.length > 1) {
+                            objective.setHocket(Double.valueOf(tokens[1]));
+                        }
+                        break;
+                    case "DENS":
+                        if (tokens.length == 1) {
+                            System.out.println(objective.getDensity());
+                        } else if (tokens.length > 1) {
+                            objective.setDensity(Double.valueOf(tokens[1]));
+                        }
+                        break;
+                    case "SYNC":
+                        if (tokens.length == 1) {
+                            System.out.println(objective.getSyncopation());
+                        } else if (tokens.length > 1) {
+                            objective.setSyncopation(Double.valueOf(tokens[1]));
+                        }
+                        break;
+                    case "BAL":
+                        if (tokens.length == 1) {
+                            System.out.println(objective.getBalance());
+                        } else if (tokens.length > 1) {
+                            objective.setBalance(Double.valueOf(tokens[1]));
+                        }
+                        break;
+                    case "DOWN":
+                        if (tokens.length == 1) {
+                            System.out.println(objective.getDownbeat());
+                        } else if (tokens.length > 1) {
+                            objective.setDownbeat(Double.valueOf(tokens[1]));
+                        }
+                        break;
+                    case "BACK":
+                        if (tokens.length == 1) {
+                            System.out.println(objective.getBackbeat());
+                        } else if (tokens.length > 1) {
+                            objective.setBackbeat(Double.valueOf(tokens[1]));
+                        }
+                        break;
                     case "FEATURES":
                         // Prints current values for all features
                         break;
