@@ -169,8 +169,15 @@ public class Objective {
     }
 
     // Return desired values to ControlSystem
-    public double[] getDesiredValues() {
-        return desiredValues;
+    public String getDesiredValues() {
+        StringBuffer buffer = new StringBuffer();
+        buffer.append("Hocket: " + desiredValues[0]);
+        buffer.append("\nDensity: " + desiredValues[1]);
+        buffer.append("\nSyncopation: " + desiredValues[2]);
+        buffer.append("\nBalance: " + desiredValues[3]);
+        buffer.append("\nDownbeat: " + desiredValues[4]);
+        buffer.append("\nBackbeat: " + desiredValues[5]);
+        return buffer.toString();
     }
 
     public double getHocket() {

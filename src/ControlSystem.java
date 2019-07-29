@@ -8,7 +8,6 @@ public class ControlSystem extends Thread {
     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
     String line;
     boolean quit = false;
-    double[] desiredValues = new double[6]; // For the 6 musical features
 
     // Global population variables
     int popSize = 10;
@@ -98,6 +97,7 @@ public class ControlSystem extends Thread {
                         break;
                     case "FEATURES":
                         // Prints current values for all features
+                        System.out.println(objective.getDesiredValues());
                         break;
                     case "QUIT":
                         quit = true;
