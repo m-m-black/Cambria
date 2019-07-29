@@ -15,12 +15,12 @@ public class Objective {
     private static double[] actualValues;
 
     // Variables to analyse the Member
-    private static int totalNotes;
-    private static int hocketNotes;
-    private static int syncNotes;
-    private static int firstHalfNotes;
-    private static int secondHalfNotes;
-    private static int downbeats;
+    private static double totalNotes;
+    private static double hocketNotes;
+    private static double syncNotes;
+    private static double firstHalfNotes;
+    private static double secondHalfNotes;
+    private static double downbeats;
     private static double backbeats;
     private static double firstHalfDensity;
     private static double secondHalfDensity;
@@ -146,15 +146,15 @@ public class Objective {
 
     // Sets all analysis variables to 0
     private static void resetCounters() {
-        totalNotes = 0;
-        hocketNotes = 0;
-        syncNotes = 0;
-        firstHalfNotes = 0;
-        secondHalfNotes = 0;
-        downbeats = 0;
-        backbeats = 0;
-        firstHalfDensity = 0;
-        secondHalfDensity = 0;
+        totalNotes = 0.0;
+        hocketNotes = 0.0;
+        syncNotes = 0.0;
+        firstHalfNotes = 0.0;
+        secondHalfNotes = 0.0;
+        downbeats = 0.0;
+        backbeats = 0.0;
+        firstHalfDensity = 0.0;
+        secondHalfDensity = 0.0;
         noteCounter = 0;
     }
 

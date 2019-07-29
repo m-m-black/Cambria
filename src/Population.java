@@ -41,29 +41,36 @@ public class Population {
         }
     }
 
-    public void evolve() {
-        // Assess fitness
-        assess();
-        // Iterate over population to perform selection and crossover
-        for (int i = 0; i < parentPop.length; i++) {
-            if (i < crossPoint) {
-                // Perform crossover of parents
-                Member[] parents = select();
-                Member child = crossover(parents);
-                child.mutate(mutRate, random);
-                childPop[i] = child;
-            } else {
-                // Perform tournament and add winner to population
-                childPop[i] = tourney();
+    public void evolve(int genNum) {
+        for (int i = 0; i < genNum; i++) {
+            // Assess fitness of parent population
+            assess(parentPop);
+            // Iterate over population to perform selection and crossover
+            for (int j = 0; j < parentPop.length; j++) {
+                if (j < crossPoint) {
+                    // Perform crossover of parents
+                    Member[] parents = select();
+                    Member child = crossover(parents);
+                    child.mutate(mutRate, random);
+                    childPop[j] = child;
+                } else {
+                    // Perform tournament and add winner to population
+                    childPop[j] = tourney();
+                }
             }
+            // Assess fitness of child population
+            assess(childPop);
             // Set parent population to child population
             parentPop = childPop;
         }
+//        for (Member m: parentPop) {
+//            System.out.println(m.getCost());
+//        }
     }
 
-    private void assess() {
+    private void assess(Member[] pop) {
         // Assess fitness of each Member
-        for (Member m: parentPop) {
+        for (Member m: pop) {
             Objective.assess(m);
         }
     }
@@ -114,5 +121,29 @@ public class Population {
         // Send best Member to Conductor, via ControlSystem,
         // or cycle through best Members each time this is called
         return null;
+    }
+
+    public Member bestMember() {
+        double bestCost = Double.MAX_VALUE;
+        Member bestMember = null;
+        for (Member m: parentPop) {
+            if (m.getCost() < bestCost) {
+                bestCost = m.getCost();
+                bestMember = m;
+            }
+        }
+        Objective.assess(bestMember);
+        return bestMember;
+    }
+
+    public void printMember(Member member) {
+        int[][] chrom = member.getDna().getChromosome();
+        for (int i = 0; i < chrom.length; i++) {
+            for (int j = 0; j < chrom[i].length; j++) {
+                System.out.print(chrom[i][j] + " ");
+            }
+            System.out.println();
+        }
+        System.out.println("Cost: " + member.getCost());
     }
 }
