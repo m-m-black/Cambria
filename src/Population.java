@@ -72,7 +72,7 @@ public class Population {
         // Return winner of a tournament
         int a = random.nextInt(parentPop.length);
         int b = random.nextInt(parentPop.length);
-        if (parentPop[a].getFitness() > parentPop[b].getFitness()) {
+        if (parentPop[a].getCost() > parentPop[b].getCost()) {
             return parentPop[a];
         } else {
             return parentPop[b];
