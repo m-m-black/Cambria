@@ -42,7 +42,7 @@ public class Objective {
     }
 
     // The actual objective function called on a Member
-    public static void assess(Member member) {
+    public static void assess(Member member, boolean print) {
         int[][] chrom = member.getDna().getChromosome();
         int rows = chrom.length;
         // Reset all analysis variables and errors to 0
@@ -64,19 +64,27 @@ public class Objective {
         // Calculate actual values
         calcActual(chrom[0].length);
         // Calculate error between desired and actual values
-        double cost = calcCost();
+        double cost = calcCost(print);
         // Set Member's cost
         member.setCost(cost);
     }
 
     // Calculate cost based on error between desired and actual feature values
-    private static double calcCost() {
+    private static double calcCost(boolean print) {
         hocketError = Math.abs(desiredValues[0] - actualValues[0]);
         densityError = Math.abs(desiredValues[1] - actualValues[1]);
         syncopationError = Math.abs(desiredValues[2] - actualValues[2]);
         balanceError = Math.abs(desiredValues[3] - actualValues[3]);
         downbeatError = Math.abs(desiredValues[4] - actualValues[4]);
         backbeatError = Math.abs(desiredValues[5] - actualValues[5]);
+        if (print) {
+            System.out.println("Hocket error: " + hocketError);
+            System.out.println("Density error: " + densityError);
+            System.out.println("Syncopation error: " + syncopationError);
+            System.out.println("Balance error: " + balanceError);
+            System.out.println("Downbeat error: " + downbeatError);
+            System.out.println("Backbeat error: " + backbeatError);
+        }
         return (hocketError + densityError + syncopationError + balanceError +
                 downbeatError + backbeatError);
     }

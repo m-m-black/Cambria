@@ -10,11 +10,11 @@ public class ControlSystem extends Thread {
     boolean quit = false;
 
     // Global population variables
-    int popSize = 400;
+    int popSize = 200;
     int genNum = 200;
     int chromLength = 16;
-    double crossRate = 0.8;
-    double mutRate = 0.3;
+    double crossRate = 0.5;
+    double mutRate = 0.01;
 
     Conductor conductor = new Conductor();
     Population population = new Population(popSize, chromLength, crossRate, mutRate);
@@ -58,7 +58,7 @@ public class ControlSystem extends Thread {
                         population.printPop();
                         break;
                     case "BEST":
-                        population.printMember(population.bestMember());
+                        population.printMember(population.getBestMember());
                         break;
                     case "HOCK":
                         if (tokens.length == 1) {
