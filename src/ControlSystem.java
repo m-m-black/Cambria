@@ -102,6 +102,13 @@ public class ControlSystem extends Thread {
                             objective.setBackbeat(Double.valueOf(tokens[1]));
                         }
                         break;
+                    case "SPR":
+                        if (tokens.length == 1) {
+                            System.out.println(objective.getSpread());
+                        } else if (tokens.length > 1) {
+                            objective.setSpread(Double.valueOf(tokens[1]));
+                        }
+                        break;
                     case "FEATURES":
                         // Prints current values for all features
                         System.out.println(objective.getDesiredValues());

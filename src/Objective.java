@@ -26,6 +26,13 @@ public class Objective {
     private static double backbeatScore;
     private static double firstHalfDensity;
     private static double secondHalfDensity;
+    private static double spread;
+    private static double maxPart;
+    private static double subMaxPart;
+    private static double minPart;
+    private static double subMinPart;
+    private static double[] partCounts;
+    private static boolean[] usedParts;
     private static int noteCounter;
 
     // Error variables
@@ -35,10 +42,14 @@ public class Objective {
     private static double balanceError;
     private static double downbeatError;
     private static double backbeatError;
+    private static double spreadError;
 
     public Objective() {
-        desiredValues = new double[6];
-        actualValues = new double[6];
+        desiredValues = new double[7];
+        actualValues = new double[7];
+        // Part count array length set to number of rows in chromosome
+        partCounts = new double[4];
+        usedParts = new boolean[4];
         resetCounters();
         resetErrors();
     }
@@ -52,9 +63,12 @@ public class Objective {
         resetErrors();
         // Calculate analysis variables
         for (int i = 0; i < chrom[0].length; i++) {
-            // Calculate number of notes per beat
+            // Calculate number of notes per part and per beat
             for (int j = 0; j < rows; j++) {
                 if (chrom[j][i] == 1) {
+                    // Increment part counter
+                    partCounts[j] += 1.0;
+                    // Increment beat counter
                     noteCounter++;
                 }
             }
@@ -79,6 +93,7 @@ public class Objective {
         balanceError = Math.abs(desiredValues[3] - actualValues[3]);
         downbeatError = Math.abs(desiredValues[4] - actualValues[4]);
         backbeatError = Math.abs(desiredValues[5] - actualValues[5]);
+        spreadError = Math.abs(desiredValues[6] - actualValues[6]);
         if (print) {
             System.out.println("Hocket error: " + hocketError);
             System.out.println("Density error: " + densityError);
@@ -86,9 +101,10 @@ public class Objective {
             System.out.println("Balance error: " + balanceError);
             System.out.println("Downbeat error: " + downbeatError);
             System.out.println("Backbeat error: " + backbeatError);
+            System.out.println("Spread error: " + spreadError);
         }
         return (hocketError + densityError + syncopationError + balanceError +
-                downbeatError + backbeatError);
+                downbeatError + backbeatError + spreadError);
     }
 
     // Calculate actual feature values
@@ -113,6 +129,9 @@ public class Objective {
         actualValues[4] = downbeats;
         // Backbeat
         actualValues[5] = backbeats;
+        // Spread
+        spread = calcSpread();
+        actualValues[6] = spread;
     }
 
     // Increment counter variables used to calculate actual feature values
@@ -173,6 +192,36 @@ public class Objective {
         backbeats = Utility.map(backbeatScore, 0.0, chrom[1].length, 0.0, 1.0);
     }
 
+    // Calculate ratio of lowest to highest part count
+    private static double calcSpread() {
+        int minIndex = 0;
+        int maxIndex = 0;
+        // Find min and max part counts
+        for (int i = 0; i < partCounts.length; i++) {
+            if (partCounts[i] > maxPart) {
+                maxPart = partCounts[i];
+                maxIndex = i;
+            }
+            if (partCounts[i] < minPart) {
+                minPart = partCounts[i];
+                minIndex = i;
+            }
+        }
+        // Set min and max part counts to "used"
+        usedParts[maxIndex] = true;
+        usedParts[minIndex] = true;
+        // Find new min and max parts
+        for (int i = 0; i < partCounts.length; i++) {
+            if (partCounts[i] <= maxPart && partCounts[i] > subMaxPart && !usedParts[i]) {
+                subMaxPart = partCounts[i];
+            }
+            if (partCounts[i] >= minPart && partCounts[i] < subMinPart && !usedParts[i]) {
+                subMinPart = partCounts[i];
+            }
+        }
+        return (minPart + subMinPart) / (maxPart + subMaxPart);
+    }
+
     // Sets all analysis variables to 0
     private static void resetCounters() {
         totalNotes = 0.0;
@@ -186,6 +235,17 @@ public class Objective {
         backbeatScore = 0.0;
         firstHalfDensity = 0.0;
         secondHalfDensity = 0.0;
+        spread = 0.0;
+        maxPart = 0.0;
+        subMaxPart = 0.0;
+        minPart = Double.MAX_VALUE;
+        subMinPart = Double.MAX_VALUE;
+        for (int i = 0; i < partCounts.length; i++) {
+            partCounts[i] = 0.0;
+        }
+        for (int i = 0; i < usedParts.length; i++) {
+            usedParts[i] = false;
+        }
         noteCounter = 0;
     }
 
@@ -208,6 +268,7 @@ public class Objective {
         buffer.append("\nBalance: " + desiredValues[3]);
         buffer.append("\nDownbeat: " + desiredValues[4]);
         buffer.append("\nBackbeat: " + desiredValues[5]);
+        buffer.append("\nSpread: " + desiredValues[6]);
         return buffer.toString();
     }
 
@@ -257,5 +318,13 @@ public class Objective {
 
     public void setBackbeat(double v) {
         desiredValues[5] = v;
+    }
+
+    public double getSpread() {
+        return desiredValues[6];
+    }
+
+    public void setSpread(double v) {
+        desiredValues[6] = v;
     }
 }
