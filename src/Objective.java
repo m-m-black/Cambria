@@ -22,6 +22,8 @@ public class Objective {
     private static double secondHalfNotes;
     private static double downbeats;
     private static double backbeats;
+    private static double backbeatCount;
+    private static double backbeatScore;
     private static double firstHalfDensity;
     private static double secondHalfDensity;
     private static int noteCounter;
@@ -144,12 +146,31 @@ public class Objective {
             downbeats = 1;
         }
         // Calculate backbeats
+        for (int i = 0; i < chrom[1].length; i++) {
+            if (chrom[1][i] == 1) {
+                // Count total number of snare hits
+                backbeatCount++;
+            }
+        }
+        // If both backbeats are active
         if (chrom[1][4] == 1 && chrom[1][12] == 1) {
-            backbeats = 1;
+            // Set highest possible score
+            backbeatScore = (double) chrom[1].length;
+            // Decrement by total number of other snare hits
+            backbeatScore -= (backbeatCount - 2);
         }
-        if (chrom[1][4] == 1 ^ chrom[1][12] == 1) {
-            backbeats = 0.5;
+        // If only 1 backbeat is active
+        if (chrom[1][4] == 1 ^ chrom[1][12] ==1) {
+            // Set middle score
+            backbeatScore = (double) (chrom[1].length) / 2.0;
         }
+        // If no backbeats are active
+        if (chrom[1][4] == 0 && chrom[1][12] == 0) {
+            // Set lowest possible score
+            backbeatScore = 0.0;
+        }
+        // Scale backbeat score to range of 0.0 - 1.0
+        backbeats = Utility.map(backbeatScore, 0.0, chrom[1].length, 0.0, 1.0);
     }
 
     // Sets all analysis variables to 0
@@ -161,6 +182,8 @@ public class Objective {
         secondHalfNotes = 0.0;
         downbeats = 0.0;
         backbeats = 0.0;
+        backbeatCount = 0.0;
+        backbeatScore = 0.0;
         firstHalfDensity = 0.0;
         secondHalfDensity = 0.0;
         noteCounter = 0;

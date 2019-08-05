@@ -15,4 +15,9 @@ public class Utility {
         }
         return chromosome;
     }
+
+    // Map, or scale, a number from one range to another range
+    public static double map(double n, double oldMin, double oldMax, double newMin, double newMax) {
+        return (newMax - newMin) * (n - oldMin) / (oldMax - oldMin) + newMin;
+    }
 }
