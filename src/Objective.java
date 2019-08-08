@@ -37,6 +37,7 @@ public class Objective {
     private static int noteCounter;
 
     // Error variables
+    private static double[] errors;
     private static double hocketError;
     private static double densityError;
     private static double syncopationError;
@@ -59,6 +60,7 @@ public class Objective {
         desiredValues = new double[7];
         actualValues = new double[7];
         weights = new double[7];
+        errors = new double[7];
         // Part count array length set to number of rows in chromosome
         partCounts = new double[4];
         usedParts = new boolean[4];
@@ -68,7 +70,7 @@ public class Objective {
     }
 
     // The actual objective function called on a Member
-    public static void assess(Member member, boolean print) {
+    public static void assess(Member member, boolean print, boolean setErrors) {
         int[][] chrom = member.getDna().getChromosome();
         int rows = chrom.length;
         // Reset all analysis variables and errors to 0
@@ -93,13 +95,13 @@ public class Objective {
         // Calculate actual values
         calcActual(chrom[0].length);
         // Calculate error between desired and actual values
-        double cost = calcCost(print);
+        double cost = calcCost(print, setErrors);
         // Set Member's cost
         member.setCost(cost);
     }
 
     // Calculate cost based on error between desired and actual feature values
-    private static double calcCost(boolean print) {
+    private static double calcCost(boolean print, boolean setErrors) {
         hocketWeight = weights[0];
         densityWeight = weights[1];
         syncopationWeight = weights[2];
@@ -122,6 +124,15 @@ public class Objective {
             System.out.println("Downbeat error: " + downbeatError);
             System.out.println("Backbeat error: " + backbeatError);
             System.out.println("Spread error: " + spreadError);
+        }
+        if (setErrors) {
+            errors[0] = hocketError;
+            errors[1] = densityError;
+            errors[2] = syncopationError;
+            errors[3] = balanceError;
+            errors[4] = downbeatError;
+            errors[5] = backbeatError;
+            errors[6] = spreadError;
         }
         return ((hocketWeight * hocketError) + (densityWeight * densityError) +
                 (syncopationWeight * syncopationError) +
@@ -282,10 +293,15 @@ public class Objective {
     }
 
     // Sets all weight values to 1.0
-    private static void resetWeights() {
+    public static void resetWeights() {
         for (int i = 0; i < weights.length; i++) {
             weights[i] = 1.0;
         }
+    }
+
+    // Set specified weight value to 2.0
+    public static void setWeight(int i) {
+        weights[i] = 2.0;
     }
 
     // Return desired values to ControlSystem
@@ -299,6 +315,11 @@ public class Objective {
         buffer.append("\nBackbeat: " + desiredValues[5]);
         buffer.append("\nSpread: " + desiredValues[6]);
         return buffer.toString();
+    }
+
+    // Return list of error values
+    public static double[] getErrors() {
+        return errors;
     }
 
     public double getHocket() {

@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Population {
@@ -10,6 +11,9 @@ public class Population {
     private int crossPoint;
     private double mutRate;
     private Member bestMember;
+    private double[] errors;
+    private double worstError;
+    private int worstErrorIndex;
 
     public Population(int popSize, int chromLength, double crossRate, double mutRate) {
         parentPop = new Member[popSize];
@@ -63,6 +67,24 @@ public class Population {
             assess(childPop);
             // Set parent population to child population
             parentPop = childPop;
+            // Find best Member in population
+            bestMember = bestMember();
+            // Get error values of the best Member
+            errors = getMemberErrors(bestMember);
+            // Find the worst error
+            worstError = 0.0;
+            worstErrorIndex = Integer.MAX_VALUE;
+            for (int j = 0; j < errors.length; j++) {
+                if (errors[j] > worstError) {
+                    worstError = errors[j];
+                    worstErrorIndex = j;
+                }
+            }
+            // Update errors in Objective class
+            Objective.resetWeights();
+            if (worstErrorIndex < errors.length) {
+                Objective.setWeight(worstErrorIndex);
+            }
         }
         // Set population's best Member
         bestMember = bestMember();
@@ -71,7 +93,7 @@ public class Population {
     private void assess(Member[] pop) {
         // Assess fitness of each Member
         for (Member m: pop) {
-            Objective.assess(m, false);
+            Objective.assess(m, false, false);
         }
     }
 
@@ -131,9 +153,15 @@ public class Population {
         return bestMember;
     }
 
+    // Return the error values for all features of a particular Member
+    public double[] getMemberErrors(Member member) {
+        Objective.assess(member, false, true);
+        return Objective.getErrors();
+    }
+
     public void printMember(Member member) {
         // Print error values of Member
-        Objective.assess(member, true);
+        Objective.assess(member, true, false);
         // Print chromosome of Member
         int[][] chrom = member.getDna().getChromosome();
         for (int i = 0; i < chrom.length; i++) {
