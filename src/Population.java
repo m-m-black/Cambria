@@ -14,11 +14,13 @@ public class Population {
     private double[] errors;
     private double worstError;
     private int worstErrorIndex;
+    private int popSize;
 
     public Population(int popSize, int chromLength, double crossRate, double mutRate) {
         parentPop = new Member[popSize];
         childPop = new Member[popSize];
         random = new Random();
+        this.popSize = popSize;
         this.chromLength = chromLength;
         this.crossRate = crossRate;
         crossPoint = (int) (parentPop.length * crossRate);
@@ -46,6 +48,69 @@ public class Population {
         }
     }
 
+    /*
+    This method evolves until the worst error of the best member is below
+    a certain threshold, OR until a certain number of generations are reached,
+    whichever happens first. This method is for experimenting with ideas
+    such as boosting mutation at certain generations, or resetting the population
+    each time the evolve method is called.
+     */
+    public void evolve() {
+        mutRate = 0.005;
+        // Try initialising the whole population each time evolve is called
+        initPop(popSize, chromLength);
+        int genNum = 0;
+        assess(parentPop);
+        double worstError = getWorstError();
+        while (worstError > 0.05) {
+            // Boost mutation every n generations
+            if (genNum % 1000 == 0 && worstError > 0.2) {
+                System.out.println("Boosting mutation");
+                mutRate = 0.5;
+            } else {
+                mutRate = 0.005;
+            }
+            for (int i = 0; i < parentPop.length; i++) {
+                if (i < crossPoint) {
+                    Member[] parents = select();
+                    Member child = crossover(parents);
+                    //Member child = crossoverParts(parents);
+                    child.mutate(mutRate, random);
+                    childPop[i] = child;
+                } else {
+                    childPop[i] = tourney();
+                }
+            }
+            assess(childPop);
+            parentPop = childPop;
+            bestMember = bestMember();
+            errors = getMemberErrors(bestMember);
+            worstError = 0.0;
+            worstErrorIndex = Integer.MAX_VALUE;
+            for (int j = 0; j < errors.length; j++) {
+                if (errors[j] > worstError) {
+                    worstError = errors[j];
+                    worstErrorIndex = j;
+                }
+            }
+            Objective.resetWeights();
+            if (worstErrorIndex < errors.length) {
+                Objective.setWeight(worstErrorIndex);
+            }
+            genNum++;
+            if (genNum > 4000) {
+                System.out.println("Max gens reached");
+                break;
+            }
+        }
+        bestMember = bestMember();
+    }
+
+    /*
+    This method evolves until genNum generations have been reached.
+    This was the original evolve method I was using. I'm now experimenting
+    with the evolve method above which currently takes no arguments.
+     */
     public void evolve(int genNum) {
         // Assess fitness of parent population
         assess(parentPop);
@@ -90,6 +155,19 @@ public class Population {
         bestMember = bestMember();
     }
 
+    private double getWorstError() {
+        errors = getMemberErrors(bestMember());
+        worstError = 0.0;
+        worstErrorIndex = Integer.MAX_VALUE;
+        for (int i = 0; i < errors.length; i++) {
+            if (errors[i] > worstError) {
+                worstError = errors[i];
+                worstErrorIndex = i;
+            }
+        }
+        return worstError;
+    }
+
     private void assess(Member[] pop) {
         // Assess fitness of each Member
         for (Member m: pop) {
@@ -117,6 +195,13 @@ public class Population {
         return parents;
     }
 
+    /*
+    This is a standard crossover method that takes the LHS
+    from one parent and the RHS from the other.
+    I think it would be worth trying a different crossover method,
+    that splices based on parts (rows), for example, taking 2 rows from
+    one parent and 2 rows from the other. This would be more musically meaningful
+     */
     private Member crossover(Member[] parents) {
         // Perform crossover and return child
         Member child = new Member();
@@ -135,6 +220,29 @@ public class Population {
             }
         }
         // Assign new chromosome to child
+        child.setDna(new DNA(childChrom));
+        return child;
+    }
+
+    /*
+    This method will perform a domain-specific crossover,
+    whereby parts (rows) will remain intact, and the combination of parts
+    will form the child
+     */
+    private Member crossoverParts(Member[] parents) {
+        Member child = new Member();
+        int[][] chromA = parents[0].getDna().getChromosome();
+        int[][] chromB = parents[1].getDna().getChromosome();
+        int[][] childChrom = new int[4][chromLength];
+        // Set rows in child from parents, need to figure out midpoint
+        for (int i = 0; i < childChrom.length; i++) {
+            int midpoint = random.nextInt(4);
+            if (i < midpoint) {
+                childChrom[i] = chromA[i];
+            } else {
+                childChrom[i] = chromB[i];
+            }
+        }
         child.setDna(new DNA(childChrom));
         return child;
     }

@@ -13,8 +13,8 @@ public class ControlSystem extends Thread {
     int popSize = 200;
     int genNum = 200;
     int chromLength = 16;
-    double crossRate = 0.5;
-    double mutRate = 0.01;
+    double crossRate = 0.9;
+    double mutRate = 0.005;
 
     Conductor conductor = new Conductor();
     Population population = new Population(popSize, chromLength, crossRate, mutRate);
@@ -22,7 +22,6 @@ public class ControlSystem extends Thread {
 
     @Override
     public void run() {
-        //population.printPop();
         System.out.println("Welcome to Cambria");
         try {
             while (!quit && (line = bufferedReader.readLine()) != null) {
@@ -52,6 +51,7 @@ public class ControlSystem extends Thread {
                         break;
                     case "EVOLVE":
                         population.evolve(genNum);
+                        //population.evolve();
                         System.out.println("Done");
                         break;
                     case "POP":
