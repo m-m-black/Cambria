@@ -73,6 +73,7 @@ public class Player {
         for (int i = 0; i < messages.length; i++) {
             n = setN(i);
             try {
+                // Only send a NOTE_ON message if the note is 1
                 if (sequence[i][currentStep] == 1) {
                     messages[i].setMessage(ShortMessage.NOTE_ON, 0, n, 100);
                     receiver.send(messages[i], -1);
@@ -82,8 +83,13 @@ public class Player {
             }
         }
         for (int i = 0; i < messages.length; i++) {
+            n = setN(i);
             try {
-                receiver.send(new ShortMessage(ShortMessage.NOTE_OFF, 0, 0, 0), -1);
+                // Only send a NOTE_OFF message if the note is 1
+                if (sequence[i][currentStep] == 1) {
+                    messages[i].setMessage(ShortMessage.NOTE_OFF, 0, n, 0);
+                    receiver.send(messages[i], -1);
+                }
             } catch (InvalidMidiDataException e) {
                 e.printStackTrace();
             }
@@ -116,7 +122,8 @@ public class Player {
         // Stop the Player
         futureTask.cancel(true);
         executorService.shutdown();
-        // Send NOTE_OFF messages on all tracks
+        receiver.close();
+        midiDevice.close();
     }
 
     public void setSequence(int[][] sequence) {
