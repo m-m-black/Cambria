@@ -20,6 +20,8 @@ public class ControlSystem extends Thread {
     Population population = new Population(popSize, chromLength, crossRate, mutRate);
     Objective objective = new Objective();
 
+    private static final String DOUBLE_ERROR_MSG = "Must be a number from 0.0 to 1.0";
+
     @Override
     public void run() {
         System.out.println("Welcome to Cambria");
@@ -33,7 +35,11 @@ public class ControlSystem extends Thread {
                         if (tokens.length == 1) {
                             System.out.println(conductor.getTempo());
                         } else if (tokens.length > 1) {
-                            conductor.setTempo(Integer.parseInt(tokens[1]));
+                            if (isInteger(tokens[1])) {
+                                conductor.setTempo(Integer.parseInt(tokens[1]));
+                            } else {
+                                System.out.println("Not a valid number");
+                            }
                         }
                         break;
                     case "START":
@@ -64,49 +70,77 @@ public class ControlSystem extends Thread {
                         if (tokens.length == 1) {
                             System.out.println(objective.getHocket());
                         } else if (tokens.length > 1) {
-                            objective.setHocket(Double.valueOf(tokens[1]));
+                            if (isValidDouble(tokens[1])) {
+                                objective.setHocket(Double.valueOf(tokens[1]));
+                            } else {
+                                System.out.println(DOUBLE_ERROR_MSG);
+                            }
                         }
                         break;
                     case "DENS":
                         if (tokens.length == 1) {
                             System.out.println(objective.getDensity());
                         } else if (tokens.length > 1) {
-                            objective.setDensity(Double.valueOf(tokens[1]));
+                            if (isValidDouble(tokens[1])) {
+                                objective.setDensity(Double.valueOf(tokens[1]));
+                            } else {
+                                System.out.println(DOUBLE_ERROR_MSG);
+                            }
                         }
                         break;
                     case "SYNC":
                         if (tokens.length == 1) {
                             System.out.println(objective.getSyncopation());
                         } else if (tokens.length > 1) {
-                            objective.setSyncopation(Double.valueOf(tokens[1]));
+                            if (isValidDouble(tokens[1])) {
+                                objective.setSyncopation(Double.valueOf(tokens[1]));
+                            } else {
+                                System.out.println(DOUBLE_ERROR_MSG);
+                            }
                         }
                         break;
                     case "BAL":
                         if (tokens.length == 1) {
                             System.out.println(objective.getBalance());
                         } else if (tokens.length > 1) {
-                            objective.setBalance(Double.valueOf(tokens[1]));
+                            if (isValidDouble(tokens[1])) {
+                                objective.setBalance(Double.valueOf(tokens[1]));
+                            } else {
+                                System.out.println(DOUBLE_ERROR_MSG);
+                            }
                         }
                         break;
                     case "DOWN":
                         if (tokens.length == 1) {
                             System.out.println(objective.getDownbeat());
                         } else if (tokens.length > 1) {
-                            objective.setDownbeat(Double.valueOf(tokens[1]));
+                            if (isValidDouble(tokens[1])) {
+                                objective.setDownbeat(Double.valueOf(tokens[1]));
+                            } else {
+                                System.out.println(DOUBLE_ERROR_MSG);
+                            }
                         }
                         break;
                     case "BACK":
                         if (tokens.length == 1) {
                             System.out.println(objective.getBackbeat());
                         } else if (tokens.length > 1) {
-                            objective.setBackbeat(Double.valueOf(tokens[1]));
+                            if (isValidDouble(tokens[1])) {
+                                objective.setBackbeat(Double.valueOf(tokens[1]));
+                            } else {
+                                System.out.println(DOUBLE_ERROR_MSG);
+                            }
                         }
                         break;
                     case "SPR":
                         if (tokens.length == 1) {
                             System.out.println(objective.getSpread());
                         } else if (tokens.length > 1) {
-                            objective.setSpread(Double.valueOf(tokens[1]));
+                            if (isValidDouble(tokens[1])) {
+                                objective.setSpread(Double.valueOf(tokens[1]));
+                            } else {
+                                System.out.println(DOUBLE_ERROR_MSG);
+                            }
                         }
                         break;
                     case "FEATURES":
@@ -122,6 +156,30 @@ public class ControlSystem extends Thread {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    // Check if a string can be parsed as a double
+    private static boolean isValidDouble(String str) {
+        try {
+            double d = Double.parseDouble(str);
+            if (d < 0.0 || d > 1.0) {
+                return false;
+            } else {
+                return true;
+            }
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    // Check if a string can be parsed as an integer
+    private static boolean isInteger(String str) {
+        try {
+            Integer.parseInt(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
         }
     }
 }
