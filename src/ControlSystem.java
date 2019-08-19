@@ -51,7 +51,6 @@ public class ControlSystem extends Thread {
                         break;
                     case "EVOLVE":
                         population.evolve(genNum);
-                        FileHandler.writeDataToFile("test data", "/Users/mblack/IdeaProjects/Cambria/output");
                         //population.evolve();
                         System.out.println("Done");
                         break;

@@ -304,8 +304,8 @@ public class Objective {
         weights[i] = 2.0;
     }
 
-    // Return desired values to ControlSystem
-    public String getDesiredValues() {
+    // Return string of desired values to ControlSystem
+    public static String getDesiredValues() {
         StringBuffer buffer = new StringBuffer();
         buffer.append("Hocket: " + desiredValues[0]);
         buffer.append("\nDensity: " + desiredValues[1]);
@@ -314,6 +314,19 @@ public class Objective {
         buffer.append("\nDownbeat: " + desiredValues[4]);
         buffer.append("\nBackbeat: " + desiredValues[5]);
         buffer.append("\nSpread: " + desiredValues[6]);
+        return buffer.toString();
+    }
+
+    // Return string of errors
+    public static String getErrorsAsString() {
+        StringBuffer buffer = new StringBuffer();
+        buffer.append("Hocket: " + errors[0]);
+        buffer.append("\nDensity: " + errors[1]);
+        buffer.append("\nSyncopation: " + errors[2]);
+        buffer.append("\nBalance: " + errors[3]);
+        buffer.append("\nDownbeat: " + errors[4]);
+        buffer.append("\nBackbeat: " + errors[5]);
+        buffer.append("\nSpread: " + errors[6]);
         return buffer.toString();
     }
 

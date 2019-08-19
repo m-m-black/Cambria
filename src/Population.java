@@ -16,6 +16,10 @@ public class Population {
     private int worstErrorIndex;
     private int popSize;
 
+    // Output file for logging experiment data
+    private static final String OUTPUT_FILENAME = "/Users/mblack/IdeaProjects/Cambria/output";
+
+
     public Population(int popSize, int chromLength, double crossRate, double mutRate) {
         parentPop = new Member[popSize];
         childPop = new Member[popSize];
@@ -153,6 +157,11 @@ public class Population {
         }
         // Set population's best Member
         bestMember = bestMember();
+        // Write data to file
+        // Need to decide what data I want to write
+        String desiredValues = Objective.getDesiredValues();
+        String errors = Objective.getErrorsAsString();
+        FileHandler.writeDataToFile(desiredValues, errors, OUTPUT_FILENAME);
     }
 
     private double getWorstError() {
