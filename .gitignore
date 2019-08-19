@@ -15,6 +15,7 @@
 
 # Program-specific files
 *.txt
+output
 
 # Generated files
 .idea/**/contentModel.xml
