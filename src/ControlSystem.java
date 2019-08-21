@@ -10,9 +10,9 @@ public class ControlSystem extends Thread {
     boolean quit = false;
 
     // Global population variables
-    int popSize = 200;
+    int popSize = 1000;
     int genNum = 200;
-    int chromLength = 16;
+    int chromLength = 32;
     double crossRate = 0.9;
     double mutRate = 0.005;
 
@@ -53,7 +53,8 @@ public class ControlSystem extends Thread {
                         break;
                     case "SET":
                         // Set currMember in conductor
-                        conductor.setCurrMember(population.bestMember());
+                        //conductor.setCurrMember(population.bestMember());
+                        conductor.setCurrMember(population.getBestMember());
                         break;
                     case "EVOLVE":
                         population.evolve(genNum);
@@ -66,6 +67,8 @@ public class ControlSystem extends Thread {
                     case "BEST":
                         population.printMember(population.getBestMember());
                         break;
+                    case "BREAK":
+                        population.printMember(population.breakMember(population.getBestMember()));
                     case "HOCK":
                         if (tokens.length == 1) {
                             System.out.println(objective.getHocket());

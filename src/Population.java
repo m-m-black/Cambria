@@ -290,6 +290,17 @@ public class Population {
         System.out.println("Cost: " + member.getCost());
     }
 
+    public Member breakMember(Member member) {
+        int[][] chrom = member.getDna().getChromosome();
+        // Choose random row to replace
+        int rowToBreak = random.nextInt(member.getDna().getChromosome().length);
+        int[] brokenRow = Utility.initRow(chromLength);
+        // Replace row
+        chrom[rowToBreak] = brokenRow;
+        member.setDna(new DNA(chrom));
+        return member;
+    }
+
     public Member getBestMember() {
         return bestMember;
     }
