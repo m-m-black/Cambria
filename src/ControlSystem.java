@@ -53,12 +53,10 @@ public class ControlSystem extends Thread {
                         break;
                     case "SET":
                         // Set currMember in conductor
-                        //conductor.setCurrMember(population.bestMember());
                         conductor.setCurrMember(population.getBestMember());
                         break;
                     case "EVOLVE":
                         population.evolve(genNum);
-                        //population.evolve();
                         System.out.println("Done");
                         break;
                     case "POP":
