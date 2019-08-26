@@ -24,7 +24,7 @@ public class ControlSystem extends Thread {
 
     @Override
     public void run() {
-        System.out.println("Welcome to Cambria");
+        //System.out.println("Welcome to Cambria");
         try {
             while (!quit && (line = bufferedReader.readLine()) != null) {
                 String[] tokens = line.split(" ");
@@ -55,7 +55,8 @@ public class ControlSystem extends Thread {
                         // Set currMember in conductor
                         conductor.setCurrMember(population.getBestMember());
                         break;
-                    case "EVOLVE":
+                    case "RUN":
+                        System.out.println("Generating beat...");
                         population.evolve(genNum);
                         System.out.println("Done");
                         break;
