@@ -15,9 +15,11 @@ public class Population {
     private double worstError;
     private int worstErrorIndex;
     private int popSize;
+    private double[][] errorsPerGen;
 
     // Output file for logging experiment data
     private static final String OUTPUT_FILENAME = "/Users/mblack/IdeaProjects/Cambria/output";
+    private static final String LOG_FILENAME = "/Users/mblack/IdeaProjects/Cambria/log";
 
 
     public Population(int popSize, int chromLength, double crossRate, double mutRate) {
@@ -116,6 +118,8 @@ public class Population {
     with the evolve method above which currently takes no arguments.
      */
     public void evolve(int genNum) {
+        initPop(popSize, chromLength);
+        errorsPerGen = new double[7][genNum];
         // Assess fitness of parent population
         assess(parentPop);
         // Iterate over population to perform selection and crossover
@@ -154,6 +158,10 @@ public class Population {
             if (worstErrorIndex < errors.length) {
                 Objective.setWeight(worstErrorIndex);
             }
+            // Add errors for each feature to errorsPerGen
+            for (int j = 0; j < errors.length; j++) {
+                errorsPerGen[j][i] = errors[j];
+            }
         }
         // Set population's best Member
         bestMember = bestMember();
@@ -162,6 +170,7 @@ public class Population {
         String desiredValues = Objective.getDesiredValues();
         String errors = Objective.getErrorsAsString();
         FileHandler.writeDataToFile(desiredValues, errors, OUTPUT_FILENAME);
+        FileHandler.writeLogToFile(errorsPerGen, LOG_FILENAME);
     }
 
     private double getWorstError() {
